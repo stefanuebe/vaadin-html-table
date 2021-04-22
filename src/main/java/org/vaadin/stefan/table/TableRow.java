@@ -117,7 +117,7 @@ public class TableRow extends HtmlComponent {
 
     /**
      * Removes the data cell with the given index. Noop, if no data cell has been found for that index.
-     * <p/>
+     * <br><br>
      * The index is expected to relate on data cells only, which means, that any header cells are ignores / not counted.
      * For instance in a row with the two cells (header, data), this method expects a 0 to map the data cell instance
      * (whereas {@link #getCell(int)} would map it with 1).
@@ -138,7 +138,7 @@ public class TableRow extends HtmlComponent {
 
     /**
      * Removes the header cell with the given index. Noop, if no header cell has been found for that index.
-     * <p/>
+     * <br><br>
      * The index is expected to relate on header cells only, which means, that any header cells are ignores / not counted.
      * For instance in a row with the two cells (data, header), this method expects a 0 to map the header cell instance
      * (whereas {@link #getCell(int)} would map it with 1).
@@ -195,7 +195,7 @@ public class TableRow extends HtmlComponent {
     /**
      * Returns the header cell with the given index or an empty optional, if the index is out of bounds or if no header
      * cell has been found for that index.
-     * <p/>
+     * <br><br>
      * The index is expected to relate on header cells only, which means, that any header cells are ignores / not counted.
      * For instance in a row with the two cells (data, header), this method expects a 0 to map the header cell instance
      * (whereas {@link #getCell(int)} would map it with 1).
@@ -210,7 +210,7 @@ public class TableRow extends HtmlComponent {
     /**
      * Returns the data cell with the given index or an empty optional, if the index is out of bounds or if no data
      * cell has been found for that index.
-     * <p/>
+     * <br><br>
      * The index is expected to relate on data cells only, which means, that any data cells are ignores / not counted.
      * For instance in a row with the two cells (header, data), this method expects a 0 to map the data cell instance
      * (whereas {@link #getCell(int)} would map it with 1).

@@ -33,7 +33,7 @@ public class TableColumn extends Component implements HasStyle {
     /**
      * Sets the column span. That column span defines how styles of the column's css class will cover
      * related cells. It does not override the cell's colspan attribute.
-     * <p/>
+     * <br><br>
      * Must be a positive integer
      * @param span span
      */

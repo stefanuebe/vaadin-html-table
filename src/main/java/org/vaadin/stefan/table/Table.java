@@ -31,11 +31,11 @@ import com.vaadin.flow.dom.Element;
  *     <ul>a tfoot</ul>
  *     <ul>a tbody or a set of table rows</ul>
  * </li>
- * <p/>
+ * <br><br>
  * Subelements except for rows are created when calling the respective getter, for instance {@link #getHead()}. Since
  * {@code <table>} expects a certain order of elements, this class takes care of positioning them in the correct
  * order (e.g. head {@code <thead>}, then {@code <tbody>} and then {@code <tfoot>}, etc).
- * <p/>
+ * <br><br>
  * Also a table must not contain rows as direct childs, when having a {@code <tbody>}. Therefore, all previously to the
  * table assigned rows are automatically assigned to the {@code <tbody>}, when {@link #getBody()} is called.
  *
@@ -97,10 +97,10 @@ public class Table extends HtmlComponent implements TableRowContainer {
 
     /**
      * Returns the {@link TableBody} for this instance. Creates a new instance on the first call.
-     * <p/>
+     * <br><br>
      * When rows have been assigned to this table instance before calling this method, these rows will
      * be reassigned to the body to prevent creating an invalid dom structure.
-     * <p/>
+     * <br><br>
      * Any subsequent calls to this table's {@link #addRows(TableRow...)} method will be delegated to the
      * body's one.
      * @return table body
@@ -158,7 +158,7 @@ public class Table extends HtmlComponent implements TableRowContainer {
 
     /**
      * Adds the given list of rows.
-     * <p/>
+     * <br><br>
      * When this table has a body, it will automatically delegate the call to the body's add method.
      * @param rows rows
      */
