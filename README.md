@@ -33,16 +33,6 @@ detailsRow.addDataCell().setText("Hello");
 detailsRow.addDataCell().setText("World");
 ```
 
-## Using a caption element
-```
-Table table = new Table();
-
-table.getCaption().setText("Some caption"); 
-
-// caption also supports components
-table.getCaption().add(new Image(...));
-```
-
 ## Applying colspan and rowspan to cells
 ```
 Table table = new Table();
@@ -71,6 +61,16 @@ cell.getStyle().set("background-color", "#ddf");
 table.getCaption().setText("Using col- and rowspan");
 
 add(table);
+```
+
+## Using a caption element
+```
+Table table = new Table();
+
+table.getCaption().setText("Some caption"); 
+
+// caption also supports components
+table.getCaption().add(new Image(...));
 ```
 
 ## Structuring the table
@@ -121,4 +121,49 @@ headerRow.streamHeaderCells().forEach(c -> c.setScope(TableHeaderCell.SCOPE_COLU
 table.getCaption().setText("Using colgroups, thead and tbody");
 
 add(table);
+```
+
+## Integrating Vaadin components
+```
+Table table = new Table();
+
+TableRow headerRow = table.addRow();
+headerRow.addHeaderCell().setText("Name");
+headerRow.addHeaderCell().setText("Age");
+
+for (int i = 0; i < 10; i++) {
+    TextField textField = new TextField();
+    textField.setValue("Some user " + i );
+
+    NumberField numberField = new NumberField();
+    numberField.setValue((double) (20 + i));
+
+    TableRow detailsRow = table.addRow();
+    detailsRow.addDataCell().add(textField);
+    detailsRow.addDataCell().add(numberField);
+}
+
+add(table);
+```
+
+## Changing the content
+```
+// The table and its content is modifiable as any other Vaadin component
+
+Table table = new Table();
+table.setWidth("500px");
+
+TableRow headerRow = table.addRow();
+headerRow.addHeaderCell().setText("Hello");
+headerRow.addHeaderCell().setText("World");
+
+TableRow detailsRow = table.addRow();
+detailsRow.addDataCell().setText("Hello");
+detailsRow.addDataCell().setText("World");
+
+add(table, new Button("Change cell content", event -> {
+    table.getRow(1)
+            .flatMap(row -> row.getCell(1))
+            .ifPresent(cell -> cell.setText("You :)"));
+}));
 ```
