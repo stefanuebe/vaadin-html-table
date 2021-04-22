@@ -3,7 +3,7 @@
 
     <groupId>org.vaadin.stefan</groupId>
     <artifactId>html-table</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>HTML Table</name>
     <description>Integration of html element table for Vaadin Flow</description>
 
