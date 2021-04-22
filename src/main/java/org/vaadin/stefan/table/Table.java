@@ -23,14 +23,14 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.dom.Element;
 
 /**
- * Represents the html table element ({@code <&lt;>table>}). Can contain
- * <li>
- *     <ul>a caption</ul>
- *     <ul>a column group</ul>
- *     <ul>a thead</ul>
- *     <ul>a tfoot</ul>
- *     <ul>a tbody or a set of table rows</ul>
- * </li>
+ * Represents the html table element ({@code <table>}). Can contain
+ * <ul>
+ *     <li>a caption</li>
+ *     <li>a column group</li>
+ *     <li>a thead</li>
+ *     <li>a tfoot</li>
+ *     <li>a tbody or a set of table rows</li>
+ * </ul>
  * <br><br>
  * Subelements except for rows are created when calling the respective getter, for instance {@link #getHead()}. Since
  * {@code <table>} expects a certain order of elements, this class takes care of positioning them in the correct
