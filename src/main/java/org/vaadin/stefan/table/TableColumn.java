@@ -46,6 +46,7 @@ public class TableColumn extends Component implements HasStyle {
 
     /**
      * Returns the span attribute for this column. Default is 1, if none has been set for this instance.
+     * @return span
      */
     public int getSpan() {
         String span = getElement().getAttribute(ATTRIBUTE_SPAN);
