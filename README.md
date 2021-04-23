@@ -172,7 +172,7 @@ add(table, new Button("Change cell content", event -> {
 }));
 ```
 
-## Creating a testcase
+## Creating a Testbench testcase
 ```
 // Needs the html-table-testbench-elements
 // @see https://vaadin.com/directory/component/html-table-testbench-elements
