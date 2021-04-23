@@ -1,6 +1,7 @@
 # HTML Table Testbench Elements
 
-A set of Testbench Elements to be used in custom Vaadin Testbench UI tests.
+A set of Testbench Elements to be used in custom Vaadin Testbench UI tests. 
+Intended to be used with https://vaadin.com/directory/component/html-table.
 
 ## Example test
 Two example files on how a test with these Testbench elements could look like
