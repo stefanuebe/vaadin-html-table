@@ -75,6 +75,7 @@ public class TableColumnGroup extends Component {
      * Inserts a single column instance at the given index to this group. Existing items will be placed after the inserted items.
      * The created column is returned for further configuration.
      *
+     * @param index index to insert the column at
      * @return the created column
      */
     public TableColumn insertColumn(int index) {
@@ -85,6 +86,7 @@ public class TableColumnGroup extends Component {
 
     /**
      * Inserts the given columns at the given index to this instance. Existing items will be placed after the inserted items.
+     * @param index index to insert the columns at
      * @param columns columns
      */
     public void insertColumns(int index, TableColumn... columns) {

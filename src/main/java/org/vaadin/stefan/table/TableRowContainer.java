@@ -74,6 +74,7 @@ public interface TableRowContainer extends HasElement {
      * Inserts a single row instance at the given index to this container. Existing items will be placed after the inserted items.
      * The created row is returned for further configuration.
      *
+     * @param index to insert the row at
      * @return the created row
      */
     default TableRow insertRow(int index) {
@@ -84,6 +85,7 @@ public interface TableRowContainer extends HasElement {
 
     /**
      * Inserts the given rows at the given index to this instance. Existing items will be placed after the inserted items.
+     * @param index to insert the rows at
      * @param rows rows
      */
     default void insertRows(int index, TableRow... rows) {
