@@ -15,7 +15,6 @@
  */
 package org.vaadin.stefan.table;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +23,6 @@ import java.util.stream.Stream;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.dom.Element;
 
 /**
  * Represents a table column group element ({@code <colgroup>}). Contains a list of column elements.
@@ -51,7 +49,7 @@ public class TableColumnGroup extends Component {
      * @param columns columns
      */
     public void addColumns(TableColumn... columns) {
-        getElement().appendChild(Arrays.stream(columns).map(Component::getElement).toArray(Element[]::new));
+        getElement().appendChild(ElementHelper.asElements(columns));
     }
 
     /**
@@ -74,6 +72,48 @@ public class TableColumnGroup extends Component {
     }
 
     /**
+     * Inserts a single column instance at the given index to this group. Existing items will be placed after the inserted items.
+     * The created column is returned for further configuration.
+     *
+     * @return the created column
+     */
+    public TableColumn insertColumn(int index) {
+        TableColumn tableColumn = new TableColumn();
+        insertColumns(index, tableColumn);
+        return tableColumn;
+    }
+
+    /**
+     * Inserts the given columns at the given index to this instance. Existing items will be placed after the inserted items.
+     * @param columns columns
+     */
+    public void insertColumns(int index, TableColumn... columns) {
+        getElement().insertChild(index, ElementHelper.asElements(columns));
+    }
+
+    /**
+     * Replaces a single column instance to the given index in this group and replaces the existing column.
+     * <br><br>
+     * This method has the same functionality as {@link #replaceColumn(int, TableColumn)}.
+     *
+     * @see #replaceColumn(int, TableColumn)
+     * @param index index to set the new item to
+     * @param column column
+     */
+    public void setColumn(int index, TableColumn column) {
+        replaceColumn(index, column);
+    }
+
+    /**
+     * Replaces a single column instance to the given index in this group and replaces the existing column.
+     * @param index index to set the new item to
+     * @param column column
+     */
+    public void replaceColumn(int index, TableColumn column) {
+        getElement().setChild(index, column.getElement());
+    }
+
+    /**
      * Removes the column with the given index. Noop, if no column has been found for that index.
      * @param index index to remove
      */
@@ -87,7 +127,7 @@ public class TableColumnGroup extends Component {
      * @param columns columns to remove
      */
     public void removeColumns(TableColumn... columns) {
-        getElement().removeChild(Arrays.stream(columns).map(Component::getElement).toArray(Element[]::new));
+        getElement().removeChild(ElementHelper.asElements(columns));
     }
 
     /**

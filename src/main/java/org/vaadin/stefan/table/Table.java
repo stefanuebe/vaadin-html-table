@@ -15,12 +15,11 @@
  */
 package org.vaadin.stefan.table;
 
-import java.util.Arrays;
+import java.util.stream.Stream;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HtmlComponent;
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.dom.Element;
 
 /**
  * Represents the html table element ({@code <table>}). Can contain
@@ -32,21 +31,22 @@ import com.vaadin.flow.dom.Element;
  *     <li>a tbody or a set of table rows</li>
  * </ul>
  * <br><br>
- * Subelements except for rows are created when calling the respective getter, for instance {@link #getHead()}. Since
+ * Sub elements except for rows are created when calling the respective getter, for instance {@link #getHead()}. Since
  * {@code <table>} expects a certain order of elements, this class takes care of positioning them in the correct
  * order (e.g. head {@code <thead>}, then {@code <tbody>} and then {@code <tfoot>}, etc).
  * <br><br>
- * Also a table must not contain rows as direct childs, when having a {@code <tbody>}. Therefore, all previously to the
+ * Also a table must not contain rows as direct children, when having a {@code <tbody>}. Therefore, all previously to the
  * table assigned rows are automatically assigned to the {@code <tbody>}, when {@link #getBody()} is called.
+ * <br><br>
+ * Also all subsequent calls to any table row method are automatically delegated to the {@code <tbody>}.
  *
+ * @author Stefan Uebe
  * @see TableCaption
  * @see TableColumnGroup
  * @see TableRow
  * @see TableHead
  * @see TableBody
  * @see TableFoot
- *
- * @author Stefan Uebe
  */
 @Tag("table")
 public class Table extends HtmlComponent implements TableRowContainer {
@@ -93,6 +93,61 @@ public class Table extends HtmlComponent implements TableRowContainer {
         }
 
         return head;
+    }
+
+    /**
+     * Removes the head instance from this table.
+     * <br><br>
+     * Does <b>not</b> move any rows from the head to the table itself. That has
+     * to be done manually.
+     */
+    public void removeHead() {
+        if (head != null) {
+            getElement().removeChild(head.getElement());
+        }
+    }
+
+    /**
+     * Removes the foot instance from this table.
+     * <br><br>
+     * Does <b>not</b> move any rows from the foot to the table itself. That has
+     * to be done manually.
+     */
+    public void removeFoot() {
+        if (foot != null) {
+            getElement().removeChild(foot.getElement());
+        }
+    }
+
+
+    /**
+     * Removes the body instance from this table.
+     * <br><br>
+     * Does <b>not</b> move any rows from the body to the table itself. That has
+     * to be done manually.
+     */
+    public void removeBody() {
+        if (body != null) {
+            getElement().removeChild(body.getElement());
+        }
+    }
+
+    /**
+     * Removes the caption instance from this table.
+     */
+    public void removeCaption() {
+        if (caption != null) {
+            getElement().removeChild(caption.getElement());
+        }
+    }
+
+    /**
+     * Removes the column group instance from this table.
+     */
+    public void removeColumnGroup() {
+        if (columnGroup != null) {
+            getElement().removeChild(columnGroup.getElement());
+        }
     }
 
     /**
@@ -159,7 +214,7 @@ public class Table extends HtmlComponent implements TableRowContainer {
     /**
      * Adds the given list of rows.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's add method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
      * @param rows rows
      */
     @Override
@@ -167,7 +222,145 @@ public class Table extends HtmlComponent implements TableRowContainer {
         if (body != null) {
             body.addRows(rows);
         } else {
-            getElement().appendChild(Arrays.stream(rows).map(Component::getElement).toArray(Element[]::new));
+            TableRowContainer.super.addRows(rows);
         }
     }
+
+    /**
+     * Inserts the given rows at the given index to this instance. Existing items will be placed after the inserted items.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * @param rows rows
+     */
+    @Override
+    public void insertRows(int index, TableRow... rows) {
+        if (body != null) {
+            body.insertRows(index, rows);
+        } else {
+            TableRowContainer.super.insertRows(index, rows);
+        }
+    }
+
+    /**
+     * Replaces a single row instance to the given index in this container and replaces the existing row.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * @param index index to set the new item to
+     * @param row row
+     */
+    @Override
+    public void replaceRow(int index, TableRow row) {
+        if (body != null) {
+            body.replaceRow(index, row);
+        } else {
+            TableRowContainer.super.replaceRow(index, row);
+        }
+    }
+
+    /**
+     * Removes the given rows from this instance. Items, that are not child of this instance, will lead to an
+     * exception.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * @param rows rows to remove
+     */
+    @Override
+    public void removeRows(TableRow... rows) {
+        if (body != null) {
+            body.removeRows(rows);
+        } else {
+            TableRowContainer.super.removeRows(rows);
+        }
+    }
+
+    /**
+     * Returns the rows of this instance as a stream. Empty if no rows have been added yet.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * @return rows as stream
+     */
+    @Override
+    public Stream<TableRow> streamRows() {
+        if (body != null) {
+            return body.streamRows();
+        } else {
+            return TableRowContainer.super.streamRows();
+        }
+    }
+
+    /**
+     * Adds a single row instance to this container. The created row is returned for further configuration.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * @return the created row
+     */
+    @Override
+    public TableRow addRow() {
+        return TableRowContainer.super.addRow();
+    }
+
+    /**
+     * Adds multiple rows to this instance based on the given integer (must be greater than 0).
+     * The created rows are returned as an array, that can be used for further configuration.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * @param rows amount of rows to add
+     * @return created row objects
+     */
+    @Override
+    public TableRow[] addRows(int rows) {
+        return TableRowContainer.super.addRows(rows);
+    }
+
+    /**
+     * Inserts a single row instance at the given index to this container. Existing items will be placed after the inserted items.
+     * The created row is returned for further configuration.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     *
+     * @return the created row
+     */
+    @Override
+    public TableRow insertRow(int index) {
+        return TableRowContainer.super.insertRow(index);
+    }
+
+    /**
+     * Replaces a single row instance to the given index in this container and replaces the existing row.
+     * <br><br>
+     * This method has the same functionality as {@link #replaceRow(int, TableRow)}.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     *
+     * @see #replaceRow(int, TableRow)
+     * @param index index to set the new item to
+     * @param row row
+     */
+    @Override
+    public void setRow(int index, TableRow row) {
+        TableRowContainer.super.setRow(index, row);
+    }
+
+    /**
+     * Removes all rows.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     */
+    @Override
+    public void removeAllRows() {
+        TableRowContainer.super.removeAllRows();
+    }
+
+    /**
+     * Removes the row with the given index. Noop, if no row has been found for that index.
+     * <br><br>
+     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * @param index index to remove
+     */
+    @Override
+    public void removeRow(int index) {
+        TableRowContainer.super.removeRow(index);
+    }
+
+
 }

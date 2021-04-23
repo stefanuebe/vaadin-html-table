@@ -15,7 +15,6 @@
  */
 package org.vaadin.stefan.table;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +23,6 @@ import java.util.stream.Stream;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
-import com.vaadin.flow.dom.Element;
 
 /**
  * A base interface for components, that contain table rows.
@@ -36,7 +34,7 @@ import com.vaadin.flow.dom.Element;
 public interface TableRowContainer extends HasElement {
 
     /**
-     * Adds a single row instance to this group. The created row is returned for further configuration.
+     * Adds a single row instance to this container. The created row is returned for further configuration.
      * @return the created row
      */
     default TableRow addRow() {
@@ -50,7 +48,7 @@ public interface TableRowContainer extends HasElement {
      * @param rows rows
      */
     default void addRows(TableRow... rows) {
-        getElement().appendChild(Arrays.stream(rows).map(Component::getElement).toArray(Element[]::new));
+        getElement().appendChild(ElementHelper.asElements(rows));
     }
 
     /**
@@ -73,6 +71,48 @@ public interface TableRowContainer extends HasElement {
     }
 
     /**
+     * Inserts a single row instance at the given index to this container. Existing items will be placed after the inserted items.
+     * The created row is returned for further configuration.
+     *
+     * @return the created row
+     */
+    default TableRow insertRow(int index) {
+        TableRow tableRow = new TableRow();
+        insertRows(index, tableRow);
+        return tableRow;
+    }
+
+    /**
+     * Inserts the given rows at the given index to this instance. Existing items will be placed after the inserted items.
+     * @param rows rows
+     */
+    default void insertRows(int index, TableRow... rows) {
+        getElement().insertChild(index, ElementHelper.asElements(rows));
+    }
+
+    /**
+     * Replaces a single row instance to the given index in this container and replaces the existing row.
+     * <br><br>
+     * This method has the same functionality as {@link #replaceRow(int, TableRow)}.
+     *
+     * @see #replaceRow(int, TableRow)
+     * @param index index to set the new item to
+     * @param row row
+     */
+    default void setRow(int index, TableRow row) {
+        replaceRow(index, row);
+    }
+
+    /**
+     * Replaces a single row instance to the given index in this container and replaces the existing row.
+     * @param index index to set the new item to
+     * @param row row
+     */
+    default void replaceRow(int index, TableRow row) {
+        getElement().setChild(index, row.getElement());
+    }
+
+    /**
      * Removes the row with the given index. Noop, if no row has been found for that index.
      * @param index index to remove
      */
@@ -86,7 +126,7 @@ public interface TableRowContainer extends HasElement {
      * @param rows rows to remove
      */
     default void removeRows(TableRow... rows) {
-        getElement().removeChild(Arrays.stream(rows).map(Component::getElement).toArray(Element[]::new));
+        getElement().removeChild(ElementHelper.asElements(rows));
     }
 
     /**
