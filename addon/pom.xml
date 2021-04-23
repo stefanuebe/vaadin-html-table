@@ -14,6 +14,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <html-table-testbench-elements.version>1.0.0</html-table-testbench-elements.version>
     </properties>
     <organization>
         <name>Stefan Uebe</name>
@@ -130,7 +131,7 @@
         <dependency>
             <groupId>org.vaadin.stefan</groupId>
             <artifactId>html-table-testbench-elements</artifactId>
-            <version>${project.version}</version>
+            <version>${html-table-testbench-elements.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -243,7 +244,6 @@
                         </executions>
                         <configuration>
                             <quiet>true</quiet>
-                            <additionalparam>-Xdoclint:none</additionalparam>
                         </configuration>
                     </plugin>
                     <plugin>
