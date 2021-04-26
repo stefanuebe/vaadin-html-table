@@ -16,20 +16,9 @@
 package org.vaadin.stefan.views;
 
 import org.vaadin.stefan.table.Table;
-import org.vaadin.stefan.table.TableCell;
-import org.vaadin.stefan.table.TableColumn;
-import org.vaadin.stefan.table.TableColumnGroup;
-import org.vaadin.stefan.table.TableHead;
-import org.vaadin.stefan.table.TableHeaderCell;
 import org.vaadin.stefan.table.TableRow;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 @Route("simple")
@@ -46,6 +35,7 @@ public class SimpleTableView extends Div {
         TableRow detailsRow = table.addRow();
         detailsRow.addDataCell().setText("Hello");
         detailsRow.addDataCell().setText("World");
+
 
         add(table);
     }
