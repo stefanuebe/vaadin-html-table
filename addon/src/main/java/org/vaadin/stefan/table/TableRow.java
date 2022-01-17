@@ -92,6 +92,17 @@ public class TableRow extends HtmlComponent {
     }
 
     /**
+     * Wrapps given components into table cells and adds them to this instance.
+     * @param components cells to add
+     */
+    public void addCells(Component... components) {
+        for (int i = 0; i < components.length; i++) {
+            TableDataCell td = addDataCell();
+            td.add(components[i]);
+        }
+    }
+
+    /**
      * Removes the given cells from this instance. Cells, that are not child of this instance, will lead to an
      * exception.
      * @param cells cells to remove
