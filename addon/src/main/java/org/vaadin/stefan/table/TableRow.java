@@ -60,6 +60,30 @@ public class TableRow extends HtmlComponent {
     }
 
     /**
+     * Wrapps given components into header cells and adds them to this instance.
+     * @param components cells to add
+     */
+    public void addHeaderCells(Component... components) {
+        for (int i = 0; i < components.length; i++) {
+            TableHeaderCell td = addHeaderCell();
+            td.add(components[i]);
+        }
+    }
+
+
+    /**
+     * Adds header cells with given string content
+     *
+     * @param contents strings to add to row
+     */
+    public void addHeaderCells(String... contents) {
+        for (int i = 0; i < contents.length; i++) {
+            TableHeaderCell td = addHeaderCell();
+            td.add(contents[i]);
+        }
+    }
+
+    /**
      * Adds multiple data cells to this instance based on the given integer (must be greater than 0).
      * The created cells are returned as an array, that can be used for further configuration.
      * @param cells amount of cells to add
@@ -89,6 +113,29 @@ public class TableRow extends HtmlComponent {
      */
     public void addCells(TableCell... cells) {
         getElement().appendChild(Arrays.stream(cells).map(Component::getElement).toArray(Element[]::new));
+    }
+
+    /**
+     * Wrapps given components into table cells and adds them to this instance.
+     * @param components cells to add
+     */
+    public void addCells(Component... components) {
+        for (int i = 0; i < components.length; i++) {
+            TableDataCell td = addDataCell();
+            td.add(components[i]);
+        }
+    }
+
+    /**
+     * Adds data cells with given string content
+     *
+     * @param contents strings to add to row
+     */
+    public void addCells(String... contents) {
+        for (int i = 0; i < contents.length; i++) {
+            TableDataCell td = addDataCell();
+            td.add(contents[i]);
+        }
     }
 
     /**
