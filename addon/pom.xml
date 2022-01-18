@@ -3,12 +3,12 @@
 
     <groupId>org.vaadin.stefan</groupId>
     <artifactId>html-table</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
     <name>HTML Table</name>
     <description>Integration of html element table for Vaadin Flow</description>
 
     <properties>
-        <vaadin.version>14.5.3</vaadin.version>
+        <vaadin.version>14.8.1</vaadin.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -85,17 +85,14 @@
     <dependencies>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>flow-server</artifactId>
         </dependency>
+
         <dependency>
+            <!-- for tests -->
             <groupId>com.vaadin</groupId>
-            <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin-core</artifactId>
             <exclusions>
-                <!-- Webjars are only needed when running in Vaadin 13 compatibility mode in V14.
-                     Your add-on can support npm in the same version mode and V13 compatiblity mode at the same time,
-                     or with separate versions. Any V13 version should work with the compatibility mode in V14. -->
                 <exclusion>
                     <groupId>com.vaadin.webjar</groupId>
                     <artifactId>*</artifactId>
