@@ -39,6 +39,17 @@ import com.vaadin.flow.dom.Element;
 @Tag("tr")
 public class TableRow extends HtmlComponent {
 
+    public TableRow() {
+    }
+
+    /**
+     * Creates new Table row with given components wrapped as cells.
+     * @param cells the components to be placed in cells of the row
+     */
+    public TableRow(Component... cells) {
+        addCells(cells);
+    }
+    
     /**
      * Adds a data cell instance to this row. The created cell is returned for further configuration.
      * @return the created cell
