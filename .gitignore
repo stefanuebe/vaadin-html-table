@@ -15,3 +15,6 @@ drivers/
 error-screenshots/
 webpack.generated.js
 /addon/frontend/generated/vaadin.ts
+/addon/package.json
+/testbench/package.json
+/addon/package-lock.json
