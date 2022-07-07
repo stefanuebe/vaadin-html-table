@@ -15,12 +15,12 @@
  */
 package org.vaadin.stefan.table.elements;
 
-import java.util.Optional;
-
-import org.openqa.selenium.NoSuchElementException;
-
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.Element;
+import org.openqa.selenium.NoSuchElementException;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Stefan Uebe
@@ -34,6 +34,10 @@ public class TableElement extends TestBenchElement implements HasTableRowsElemen
 
     public TableBodyElement getBody() {
         return $(TableBodyElement.class).first();
+    }
+
+    public List<TableBodyElement> getBodies() {
+        return $(TableBodyElement.class).all();
     }
 
     public TableFootElement getFoot() {

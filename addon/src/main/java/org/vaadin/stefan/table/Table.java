@@ -15,11 +15,14 @@
  */
 package org.vaadin.stefan.table;
 
-import java.util.stream.Stream;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HtmlComponent;
 import com.vaadin.flow.component.Tag;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Represents the html table element ({@code <table>}). Can contain
@@ -56,7 +59,7 @@ public class Table extends HtmlComponent implements TableRowContainer {
     private TableColumnGroup columnGroup;
 
     private TableHead head;
-    private TableBody body;
+    private final List<TableBody> bodies = new LinkedList<>();
     private TableFoot foot;
 
     /**
@@ -108,6 +111,41 @@ public class Table extends HtmlComponent implements TableRowContainer {
     }
 
     /**
+     * Removes the body instance of this table. If there are multiple body elements, it will remove the first
+     * one (to align with {@link #getBody()}). Noop, if there is no body set to this table.
+     * <br><br>
+     * Does <b>not</b> move any rows from the bodies to the table itself. That has
+     * to be done manually.
+     */
+    public void removeBody() {
+        if (!bodies.isEmpty()) {
+            removeBody(0);
+        }
+    }
+
+    /**
+     * Removes the body element with the given index.
+     *
+     * @param index index
+     * @throws IndexOutOfBoundsException – if the index is out of range (index < 0 || index >= getBodies().size())
+     */
+    public void removeBody(int index) {
+        TableBody removed = bodies.remove(index);
+        getElement().removeChild(removed.getElement());
+    }
+
+    /**
+     * Removes all body instances from this table.
+     * <br><br>
+     * Does <b>not</b> move any rows from the bodies to the table itself. That has
+     * to be done manually.
+     */
+    public void removeBodies() {
+        bodies.forEach(body -> getElement().removeChild(body.getElement()));
+        bodies.clear();
+    }
+
+    /**
      * Removes the foot instance from this table.
      * <br><br>
      * Does <b>not</b> move any rows from the foot to the table itself. That has
@@ -116,19 +154,6 @@ public class Table extends HtmlComponent implements TableRowContainer {
     public void removeFoot() {
         if (foot != null) {
             getElement().removeChild(foot.getElement());
-        }
-    }
-
-
-    /**
-     * Removes the body instance from this table.
-     * <br><br>
-     * Does <b>not</b> move any rows from the body to the table itself. That has
-     * to be done manually.
-     */
-    public void removeBody() {
-        if (body != null) {
-            getElement().removeChild(body.getElement());
         }
     }
 
@@ -151,22 +176,86 @@ public class Table extends HtmlComponent implements TableRowContainer {
     }
 
     /**
-     * Returns the {@link TableBody} for this instance. Creates a new instance on the first call.
+     * Returns the {@link TableBody} element for this instance (or the first one, if multiple body elements
+     * have been assigned).
      * <br><br>
-     * When rows have been assigned to this table instance before calling this method, these rows will
-     * be reassigned to the body to prevent creating an invalid dom structure.
-     * <br><br>
-     * Any subsequent calls to this table's {@link #addRows(TableRow...)} method will be delegated to the
-     * body's one.
+     * If this table had no body elements before, this method will transfer all rows of this table to the
+     * created body element to prevent an invalid dom structure. Also any subsequent calls to this table's
+     * {@link #addRows(TableRow...)} method will be delegated to that body element / the first body element, if
+     * there are multiple.
      * @return table body
      */
     public TableBody getBody() {
-        if (body == null) {
-            body = insertIndexedChild(new TableBody(), caption, columnGroup, head);
-            body.addRows(streamRows().toArray(TableRow[]::new));
+        if (bodies.isEmpty()) {
+            return addBody();
         }
 
+        return bodies.get(0);
+    }
+
+    /**
+     * Adds a new body element to this table.
+     * <br><br>
+     * If this table had no body elements before, this method will transfer all rows of this table to the
+     * created body element to prevent an invalid dom structure. Also any subsequent calls to this table's
+     * {@link #addRows(TableRow...)} method will be delegated to that body element / the first body element, if
+     * there are multiple.
+     * @return added body
+     */
+    public TableBody addBody() {
+        TableBody body = new TableBody();
+        addBodies(body);
         return body;
+    }
+
+    /**
+     * Adds the given body elements to this table.
+     * <br><br>
+     * If this table had no body elements before, this method will transfer all rows of this table to the
+     * first given body element to prevent an invalid dom structure. Also any subsequent calls to this table's
+     * {@link #addRows(TableRow...)} method will be delegated to the first body's one.
+     */
+    public void addBodies(TableBody... tableBodies) {
+        boolean noBodiesBefore = bodies.isEmpty();
+        for (TableBody body : tableBodies) {
+            insertIndexedChild(body, calculateInsertIndexedChildPredecessors());
+            bodies.add(body);
+        }
+
+        if (noBodiesBefore && !bodies.isEmpty()) {
+            transferTableRowsToBody(bodies.get(0));
+        }
+    }
+
+    /**
+     * Transfers all rows from this table instance to the given body.
+     * @param body target body
+     */
+    private void transferTableRowsToBody(TableBody body) {
+        body.addRows(streamRows().toArray(TableRow[]::new));
+    }
+
+    /**
+     * Returns the body with the given index. If no bodies have been added yet and the parameter is 0,
+     * this method will delegate the call to {@link #getBody()} instead and return the given value.
+     * @param index body element index
+     * @return body element
+     * @throws IndexOutOfBoundsException – if the index is out of range (index < 0 || index >= getBodies().size())
+     */
+    public TableBody getBody(int index) {
+        if (bodies.isEmpty() && index == 0) {
+            return getBody();
+        }
+
+        return bodies.get(index);
+    }
+
+    /**
+     * Returns a modifiable copy of the list of table bodies. Never null.
+     * @return bodies
+     */
+    public List<TableBody> getBodies() {
+        return new ArrayList<>(bodies);
     }
 
     /**
@@ -175,10 +264,20 @@ public class Table extends HtmlComponent implements TableRowContainer {
      */
     public TableFoot getFoot() {
         if (foot == null) {
-            foot = insertIndexedChild(new TableFoot(), caption, columnGroup, head, body);
+            Component[] predecessors = calculateInsertIndexedChildPredecessors();
+            foot = insertIndexedChild(new TableFoot(), predecessors);
         }
 
         return foot;
+    }
+
+    /**
+     * Convenience method, that returns an array of all predecessor components for new body elements or the
+     * footer. The array may contain null items.
+     * @return array
+     */
+    private Component[] calculateInsertIndexedChildPredecessors() {
+        return Stream.concat(Stream.of(caption, columnGroup, head), bodies.stream()).toArray(Component[]::new);
     }
 
     /**
@@ -214,46 +313,49 @@ public class Table extends HtmlComponent implements TableRowContainer {
     /**
      * Adds the given list of rows.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      * @param rows rows
      */
     @Override
     public void addRows(TableRow... rows) {
-        if (body != null) {
-            body.addRows(rows);
-        } else {
+        if (bodies.isEmpty()) {
             TableRowContainer.super.addRows(rows);
+        } else {
+            getBody().addRows(rows);
         }
     }
 
     /**
      * Inserts the given rows at the given index to this instance. Existing items will be placed after the inserted items.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      * @param rows rows
      */
     @Override
     public void insertRows(int index, TableRow... rows) {
-        if (body != null) {
-            body.insertRows(index, rows);
-        } else {
+        if (bodies.isEmpty()) {
             TableRowContainer.super.insertRows(index, rows);
+        } else {
+            getBody().insertRows(index, rows);
         }
     }
 
     /**
      * Replaces a single row instance to the given index in this container and replaces the existing row.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      * @param index index to set the new item to
      * @param row row
      */
     @Override
     public void replaceRow(int index, TableRow row) {
-        if (body != null) {
-            body.replaceRow(index, row);
-        } else {
+        if (bodies.isEmpty()) {
             TableRowContainer.super.replaceRow(index, row);
+        } else {
+            getBody().replaceRow(index, row);
         }
     }
 
@@ -261,68 +363,82 @@ public class Table extends HtmlComponent implements TableRowContainer {
      * Removes the given rows from this instance. Items, that are not child of this instance, will lead to an
      * exception.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      * @param rows rows to remove
      */
     @Override
     public void removeRows(TableRow... rows) {
-        if (body != null) {
-            body.removeRows(rows);
-        } else {
+        if (bodies.isEmpty()) {
             TableRowContainer.super.removeRows(rows);
+        } else {
+            getBody().removeRows(rows);
         }
     }
 
     /**
      * Returns the rows of this instance as a stream. Empty if no rows have been added yet.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      * @return rows as stream
      */
     @Override
     public Stream<TableRow> streamRows() {
-        if (body != null) {
-            return body.streamRows();
-        } else {
+        if (bodies.isEmpty()) {
             return TableRowContainer.super.streamRows();
+        } else {
+            return getBody().streamRows();
         }
     }
 
     /**
      * Adds a single row instance to this container. The created row is returned for further configuration.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      * @return the created row
      */
     @Override
     public TableRow addRow() {
-        return TableRowContainer.super.addRow();
+        TableRow tableRow = new TableRow();
+        addRows(tableRow);
+        return tableRow;
     }
 
     /**
      * Adds multiple rows to this instance based on the given integer (must be greater than 0).
      * The created rows are returned as an array, that can be used for further configuration.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      * @param rows amount of rows to add
      * @return created row objects
      */
     @Override
     public TableRow[] addRows(int rows) {
-        return TableRowContainer.super.addRows(rows);
+        TableRow[] array = new TableRow[rows];
+        for (int i = 0; i < rows; i++) {
+            array[i] = new TableRow();
+        }
+        addRows(array);
+        return array;
     }
 
     /**
      * Inserts a single row instance at the given index to this container. Existing items will be placed after the inserted items.
      * The created row is returned for further configuration.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      *
      * @return the created row
      */
     @Override
     public TableRow insertRow(int index) {
-        return TableRowContainer.super.insertRow(index);
+        TableRow row = new TableRow();
+        insertRows(index, row);
+        return row;
     }
 
     /**
@@ -330,7 +446,8 @@ public class Table extends HtmlComponent implements TableRowContainer {
      * <br><br>
      * This method has the same functionality as {@link #replaceRow(int, TableRow)}.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      *
      * @see #replaceRow(int, TableRow)
      * @param index index to set the new item to
@@ -338,28 +455,34 @@ public class Table extends HtmlComponent implements TableRowContainer {
      */
     @Override
     public void setRow(int index, TableRow row) {
-        TableRowContainer.super.setRow(index, row);
+        replaceRow(index, row);
     }
 
     /**
      * Removes all rows.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      */
     @Override
     public void removeAllRows() {
-        TableRowContainer.super.removeAllRows();
+        if (bodies.isEmpty()) {
+            TableRowContainer.super.removeAllRows();
+        } else {
+            getBody().removeAllRows();
+        }
     }
 
     /**
      * Removes the row with the given index. Noop, if no row has been found for that index.
      * <br><br>
-     * When this table has a body, it will automatically delegate the call to the body's respective method.
+     * When this table has a body, it will automatically delegate the call to the body's respective method. When
+     * there are multiple body elements, it will be delegated to the first one.
      * @param index index to remove
      */
     @Override
     public void removeRow(int index) {
-        TableRowContainer.super.removeRow(index);
+        getRow(index).ifPresent(this::removeRows);
     }
 
 
