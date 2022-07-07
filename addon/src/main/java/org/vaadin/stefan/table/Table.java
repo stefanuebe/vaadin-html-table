@@ -127,7 +127,7 @@ public class Table extends HtmlComponent implements TableRowContainer {
      * Removes the body element with the given index.
      *
      * @param index index
-     * @throws IndexOutOfBoundsException – if the index is out of range (index < 0 || index >= getBodies().size())
+     * @throws IndexOutOfBoundsException – if the index is out of range (index &lt; 0 || index &gt;= getBodies().size())
      */
     public void removeBody(int index) {
         TableBody removed = bodies.remove(index);
@@ -240,7 +240,7 @@ public class Table extends HtmlComponent implements TableRowContainer {
      * this method will delegate the call to {@link #getBody()} instead and return the given value.
      * @param index body element index
      * @return body element
-     * @throws IndexOutOfBoundsException – if the index is out of range (index < 0 || index >= getBodies().size())
+     * @throws IndexOutOfBoundsException – if the index is out of range (index &lt; 0 || index &gt;= getBodies().size())
      */
     public TableBody getBody(int index) {
         if (bodies.isEmpty() && index == 0) {
