@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.vaadin.stefan.views;
+package org.vaadin.addons.stefan.gridscroller;
 
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.router.Route;
 import org.vaadin.stefan.table.*;
 
-@Route("structured-bodies")
-@CssImport("./styles/structured-bodies.css")
-public class StructuredTableMultipleBodiesView extends Div {
+public class StructuredTableMultipleBodiesView extends AbstractTableView {
 
-    public StructuredTableMultipleBodiesView() {
-        Table table = new Table();
-        table.setWidth("500px");
+    @Override
+    protected void createContent(Table table) {
+        table.addClassName("structured");
 
         TableHead head = table.getHead();
         TableRow headerRow = head.addRow();
@@ -146,8 +141,6 @@ public class StructuredTableMultipleBodiesView extends Div {
         footRow.streamHeaderCells().forEach(c -> c.setScope(TableHeaderCell.SCOPE_COLUMN));
 
         table.getCaption().setText("Using multiple tbodies");
-
-        add(table);
     }
 
 }

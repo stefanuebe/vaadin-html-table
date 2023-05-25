@@ -13,27 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.vaadin.stefan.views;
+package org.vaadin.addons.stefan.gridscroller;
 
 import org.vaadin.stefan.table.Table;
 import org.vaadin.stefan.table.TableRow;
 
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.router.Route;
+public class CaptionView extends AbstractTableView {
 
-@Route("caption")
-public class CaptionView extends Div {
-
-    public CaptionView() {
-        Table table = new Table();
-
+    @Override
+    protected void createContent(Table table) {
         TableRow detailsRow = table.addRow();
         detailsRow.addDataCell().setText("Hello");
         detailsRow.addDataCell().setText("World");
 
         table.getCaption().setText("Some caption");
-
-        add(table);
     }
 
 

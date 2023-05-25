@@ -13,32 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.vaadin.stefan.views;
+package org.vaadin.addons.stefan.gridscroller;
 
-import org.vaadin.stefan.table.Table;
-import org.vaadin.stefan.table.TableCell;
-import org.vaadin.stefan.table.TableColumn;
-import org.vaadin.stefan.table.TableColumnGroup;
-import org.vaadin.stefan.table.TableHead;
-import org.vaadin.stefan.table.TableHeaderCell;
-import org.vaadin.stefan.table.TableRow;
+import org.vaadin.stefan.table.*;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Route;
+public class StructuredTableView extends AbstractTableView {
 
-@Route("structured")
-public class StructuredTableView extends Div {
 
-    public StructuredTableView() {
-        Table table = new Table();
-        table.setWidth("500px");
-
+    @Override
+    protected void createContent(Table table) {
         TableHead head = table.getHead();
         TableRow headerRow = head.addRow();
         headerRow.addHeaderCell().setText("Hello");
@@ -60,8 +43,6 @@ public class StructuredTableView extends Div {
         headerRow.streamHeaderCells().forEach(c -> c.setScope(TableHeaderCell.SCOPE_COLUMN));
 
         table.getCaption().setText("Using colgroups, thead and tbody");
-
-        add(table);
     }
 
 }

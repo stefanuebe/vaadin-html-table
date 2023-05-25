@@ -1,6 +1,6 @@
 # HTML Table
 
-Vaadin 14 Java integration of the html Table elements.
+Vaadin Flow integration of the html Table elements.
 
 ## Description
 

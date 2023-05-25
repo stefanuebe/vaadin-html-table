@@ -13,36 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.vaadin.stefan.views;
-
-import org.vaadin.stefan.table.Table;
-import org.vaadin.stefan.table.TableCell;
-import org.vaadin.stefan.table.TableColumn;
-import org.vaadin.stefan.table.TableColumnGroup;
-import org.vaadin.stefan.table.TableHead;
-import org.vaadin.stefan.table.TableHeaderCell;
-import org.vaadin.stefan.table.TableRow;
+package org.vaadin.addons.stefan.gridscroller;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Route;
+import org.vaadin.stefan.table.Table;
+import org.vaadin.stefan.table.TableCell;
+import org.vaadin.stefan.table.TableRow;
 
-@Route("vaadin-form")
-public class VaadinComponentsFormView extends Div {
+public class VaadinComponentsFormView extends AbstractTableView {
 
-    public VaadinComponentsFormView() {
-        TableRow row;
-        TableCell cell;
+    @Override
+    protected void createContent(Table table) {
 
-        Table table = new Table();
-        table.setWidth("500px");
-
-        row = table.addRow();
+        TableRow row = table.addRow();
         TextField firstName = new TextField("First name");
         TextField lastName = new TextField("Last name");
         firstName.setWidthFull();
@@ -51,7 +39,7 @@ public class VaadinComponentsFormView extends Div {
         row.addDataCell().add(lastName);
 
         row = table.addRow();
-        cell = row.addDataCell();
+        TableCell cell = row.addDataCell();
         TextField address = new TextField("Address");
         address.setWidthFull();
         cell.add(address);
@@ -79,8 +67,9 @@ public class VaadinComponentsFormView extends Div {
         cell.setColSpan(2);
         Button save = new Button("Save");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        cell.add(save, new Button("Cancel"), new Button("Send e-mail"));
 
-        add(table);
+        HorizontalLayout layout = new HorizontalLayout(save, new Button("Cancel"), new Button("Send e-mail"));
+        cell.add(layout);
+
     }
 }

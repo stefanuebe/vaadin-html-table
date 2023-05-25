@@ -13,32 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.vaadin.stefan.views;
-
-import org.vaadin.stefan.table.Table;
-import org.vaadin.stefan.table.TableCell;
-import org.vaadin.stefan.table.TableColumn;
-import org.vaadin.stefan.table.TableColumnGroup;
-import org.vaadin.stefan.table.TableHead;
-import org.vaadin.stefan.table.TableHeaderCell;
-import org.vaadin.stefan.table.TableRow;
+package org.vaadin.addons.stefan.gridscroller;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Route;
+import org.vaadin.stefan.table.Table;
+import org.vaadin.stefan.table.TableRow;
 
-@Route("change-event")
-public class ChangeEventView extends Div {
+public class ChangeEventView extends AbstractTableView {
 
-    public ChangeEventView() {
-        Table table = new Table();
-        table.setWidth("500px");
-
+    @Override
+    protected void createContent(Table table) {
         TableRow headerRow = table.addRow();
         headerRow.addHeaderCell().setText("Hello");
         headerRow.addHeaderCell().setText("World");
@@ -47,7 +31,7 @@ public class ChangeEventView extends Div {
         detailsRow.addDataCell().setText("Hello");
         detailsRow.addDataCell().setText("World");
 
-        add(table, new Button("Change cell content", event -> {
+        add(new Button("Change cell content", event -> {
             table.getRow(1)
                     .flatMap(row -> row.getCell(1))
                     .ifPresent(cell -> cell.setText("You :)"));

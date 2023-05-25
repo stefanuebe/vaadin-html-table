@@ -13,30 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.vaadin.stefan.views;
+package org.vaadin.addons.stefan.gridscroller;
 
 import org.vaadin.stefan.table.Table;
+import org.vaadin.stefan.table.TableCell;
 import org.vaadin.stefan.table.TableRow;
 
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.router.Route;
+public class SpansView extends AbstractTableView {
 
-@Route("simple")
-public class SimpleTableView extends Div {
 
-    public SimpleTableView() {
-        Table table = new Table();
-        table.setWidth("500px");
-
+    @Override
+    protected void createContent(Table table) {
         TableRow headerRow = table.addRow();
-        headerRow.addHeaderCell().setText("Hello");
-        headerRow.addHeaderCell().setText("World");
+        TableCell cell = headerRow.addHeaderCell();
+        cell.setText("Hello world, it's me.");
+        cell.setColSpan(3);
+        cell.getStyle().set("background-color", "#fdd");
 
         TableRow detailsRow = table.addRow();
         detailsRow.addDataCell().setText("Hello");
         detailsRow.addDataCell().setText("World");
 
+        cell = detailsRow.addDataCell();
+        cell.setText("It's me.");
+        cell.setRowSpan(2);
+        cell.getStyle().set("background-color", "#dfd");
 
-        add(table);
+        detailsRow = table.addRow();
+        cell = detailsRow.addDataCell();
+        cell.setText("Hello");
+        cell.setColSpan(2);
+        cell.getStyle().set("background-color", "#ddf");
+
+        table.getCaption().setText("Using col- and rowspan");
     }
 }

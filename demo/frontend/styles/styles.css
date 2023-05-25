@@ -1,0 +1,26 @@
+@import "structured-bodies.css";
+
+table {
+    border: 1px solid lightgray;
+    border-collapse: collapse;
+
+    width: 50%;
+}
+
+vaadin-app-layout .view{
+    padding: 2rem;
+}
+
+td, th, caption {
+    border: 1px solid lightgray;
+}
+
+caption {
+    color: gray;
+    font-weight: lighter;
+    padding: 0.5rem;
+}
+
+.spacing {
+    gap: 0.7rem;
+}
